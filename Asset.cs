@@ -19,7 +19,7 @@ namespace DepCalcsCS
         //Public Properties
         public String Name {get; set;}
 
-        public String Description {get; set;}
+        //public String Description {get; set;}
 
          public DateTime PurchaseDate {get; set;}
 
@@ -27,36 +27,42 @@ namespace DepCalcsCS
 
         public double ResidualValue {get; set;}
 
+        public double Section179 {get; set;}
+
         public int UsefulLife {get; set;}
 
         public TAX_Lifes TaxLife {get; set;}
 
         public List<DepYear> GaapDepreciation {get; set;}
+
         public List<DepYear> TaxDepreciation {get; set;}
+
         
 
         //Full Constructor
-        public Asset (String sName, String sDescription, DateTime dtPurchaseDate, double fPurchasePrice, double fResidualValue, int iUSefulLife,TAX_Lifes iTaxLife )
+        public Asset (string sName, DateTime dtPurchaseDate, double fPurchasePrice, double fResidualValue, int iUSefulLife,TAX_Lifes iTaxLife, double fSection179=0, string sDescription="" )
         {
             Name = sName;
-            Description = sDescription;
+            //Description = sDescription;
             PurchaseDate = dtPurchaseDate;
             PurchasePrice = fPurchasePrice;
             ResidualValue = fResidualValue;
             UsefulLife = iUSefulLife;
             TaxLife = iTaxLife;
+            Section179 = fSection179;
             return;
         }
 
         //Limited Constructor
-        public Asset (double fPurchasePrice, double fResidualValue, int iUSefulLife)
+        public Asset (double fPurchasePrice, double fResidualValue, int iUSefulLife, string sName="Unnamed Asset", double fSection179=0)
         {
-            Name = "Unnamed Asset";
-            Description = "";
+            Name = sName;
+            //Description = "";
             PurchaseDate = DateTime.Now;
             PurchasePrice = fPurchasePrice;
             ResidualValue = fResidualValue;
             UsefulLife = iUSefulLife;
+            Section179 = fSection179;
             //guess useful life since it wasn't provided to us
             if (iUSefulLife >= 20)
             {
@@ -108,6 +114,16 @@ namespace DepCalcsCS
         public void calcSYD()
         {
             GaapDepreciation = DepCalcs.CalcSYD(this);
+        }
+
+        public void calcMacrsHY()
+        {
+            TaxDepreciation = DepCalcs.CalcMacrsHY(this);
+        }
+
+        public void calcMacrsMQ()
+        {
+            TaxDepreciation = DepCalcs.CalcMacrsMQ(this);
         }
     }
 }
