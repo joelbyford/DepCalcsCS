@@ -12,6 +12,11 @@ GET http://localhost:5000/Calculate/SL?PurchasePrice=1000&Residual=0&Life=5&Asse
 GET http://localhost:5000/Calculate/DB200?PurchasePrice=1000&Residual=0&Life=5&AssetName=DdbAsset
 
 ######################
+# SYD
+# ====================
+GET http://localhost:5000/Calculate/SYD?PurchasePrice=1000&Residual=0&Life=5&AssetName=DdbAsset
+
+######################
 # MACRS-HY
 # ====================
 GET http://localhost:5000/Calculate/MACRSHY?PurchasePrice=1000&Life=5&Section179=200&AssetName=MacrsHyAsset
@@ -20,3 +25,19 @@ GET http://localhost:5000/Calculate/MACRSHY?PurchasePrice=1000&Life=5&Section179
 # MACRS-MQ
 # ====================
 GET http://localhost:5000/Calculate/MACRSMQ?PurchasePrice=1000&Life=5&Section179=200&AssetName=MacrsMqAsset&PurchaseDate=10%2F01%2F2020
+
+#################################
+# Full Calculation via JSON POST
+# ===============================
+POST http://localhost:5000/Calculate/Depreciate?GaapMethod=SL&TaxMethod=MACRSHY
+Content-Type: application/json
+
+{
+  "name": "New Asset",
+  "purchaseDate": "2011-01-01",
+  "purchasePrice": 1000,
+  "residualValue": 0,
+  "section179": 0,
+  "usefulLife": 5,
+  "taxLife": 7
+}

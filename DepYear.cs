@@ -4,7 +4,7 @@ namespace DepCalcsCS
 {
     public class DepYear
     {
-        public short Year {get; set;}
+        public int Year {get; set;}
         public double Expense {get; set;}
         public double AccumulatedDepreciation {get; set;}
 

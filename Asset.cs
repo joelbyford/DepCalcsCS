@@ -21,7 +21,7 @@ namespace DepCalcsCS
 
         //public String Description {get; set;}
 
-         public DateTime PurchaseDate {get; set;}
+        public DateTime PurchaseDate {get; set;}
 
         public double PurchasePrice {get; set;}
 
@@ -37,7 +37,18 @@ namespace DepCalcsCS
 
         public List<DepYear> TaxDepreciation {get; set;}
 
-        
+        //Empty Constructor
+        public Asset()
+        {
+            Name = "";
+            PurchaseDate = DateTime.Now;
+            PurchasePrice = 0;
+            ResidualValue = 0;
+            UsefulLife = 0;
+            TaxLife = TAX_Lifes.NONE;
+            Section179 = 0;
+            return;
+        }
 
         //Full Constructor
         public Asset (string sName, DateTime dtPurchaseDate, double fPurchasePrice, double fResidualValue, int iUSefulLife,TAX_Lifes iTaxLife, double fSection179=0, string sDescription="" )

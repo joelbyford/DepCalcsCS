@@ -19,6 +19,40 @@ namespace DepCalcsCS.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        [Route("[controller]/Depreciate")]
+        public ActionResult<Asset> PostDepreciate([FromBody]Asset asset, [RequiredFromQuery] string GaapMethod, [RequiredFromQuery] string TaxMethod)
+        {
+            
+            switch(GaapMethod)
+            {
+                case "SL":
+                    asset.calcSL();
+                    break;
+                case "DB200":
+                    asset.calcDB200();
+                    break;
+                case "DB150":
+                    asset.calcDB150();
+                    break;
+                case "SYD":
+                    asset.calcSYD();
+                    break;
+            }
+
+            switch(TaxMethod)
+            {
+                case "MACRSHY":
+                    asset.calcMacrsHY();
+                    break;
+                case "MACRSMQ":
+                    asset.calcMacrsMQ();
+                    break;
+            }
+            
+            return asset;
+        }
+
         [HttpGet]
         [Route("[controller]/SL")]
         public ActionResult<Asset> GetSL([RequiredFromQuery] double PurchasePrice, [RequiredFromQuery] double Residual,[RequiredFromQuery]  int Life, string AssetName="")

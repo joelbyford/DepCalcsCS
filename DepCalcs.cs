@@ -14,7 +14,7 @@ namespace DepCalcsCS
         {
             List<DepYear> years = new List<DepYear>();
 
-            short iYear = 0;
+            int iYear = 0;
 	        double fAD = 0;
 
             while (iYear < asset.UsefulLife)
@@ -42,7 +42,7 @@ namespace DepCalcsCS
         {
             List<DepYear> years = new List<DepYear>();
 
-            short iYear = 0;
+            int iYear = 0;
 	        double fAD = 0;
             double fMultiplier = 0;
             double fBalance = 0;
@@ -73,7 +73,7 @@ namespace DepCalcsCS
         {
             List<DepYear> years = new List<DepYear>();
 
-            short iYear = 0;
+            int iYear = 0;
 	        double fAD = 0;
             double fMultiplier = 0;
             double fBalance = 0;
@@ -104,15 +104,15 @@ namespace DepCalcsCS
         {
             List<DepYear> years = new List<DepYear>();
 
-            short iYear = 0;
+            int iYear = 0;
             int iYearsLeft = 0;
-            short iSigma = 0;
+            int iSigma = 0;
 	        double fAD = 0;
             double fBasis = 0;
 
             fBasis = asset.PurchasePrice - asset.ResidualValue;
             iYearsLeft = asset.UsefulLife;
-            iSigma = (short)(asset.UsefulLife * (((double)asset.UsefulLife+(double)1)/(double)2));
+            iSigma = (int)(asset.UsefulLife * (((double)asset.UsefulLife+(double)1)/(double)2));
 
             for(iYear=0;iYear<asset.UsefulLife;iYear++)
 	        {
@@ -138,7 +138,7 @@ namespace DepCalcsCS
             List<DepYear> years = new List<DepYear>();
 
             // locals
-            short iYear = 0;
+            int iYear = 0;
 	        double fAD = 0;
             double fBasis = 0;
 
@@ -165,7 +165,7 @@ namespace DepCalcsCS
             //calculate the basis given SS179
             fBasis = asset.PurchasePrice - asset.Section179;
 
-            for(iYear=0;iYear<=asset.UsefulLife;iYear++)
+            for(iYear=0;iYear<=(int)asset.TaxLife;iYear++)
 	        {
                 DepYear oYear = new DepYear();
                 oYear.Year = iYear;
@@ -229,7 +229,7 @@ namespace DepCalcsCS
             List<DepYear> years = new List<DepYear>();
 
             // locals
-            short iYear = 0;
+            int iYear = 0;
 	        double fAD = 0;
             double fBasis = 0;
             short iQtr = 0;
@@ -271,7 +271,7 @@ namespace DepCalcsCS
             //figure out the quarter by ignoring the fraction through casting to a short int
 	        iQtr = (short)(asset.PurchaseDate.Month/12);
 
-            for(iYear=0;iYear<=asset.UsefulLife;iYear++)
+            for(iYear=0;iYear<=(int)asset.TaxLife;iYear++)
 	        {
                 DepYear oYear = new DepYear();
                 oYear.Year = iYear;
