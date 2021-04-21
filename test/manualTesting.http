@@ -41,3 +41,20 @@ Content-Type: application/json
   "usefulLife": 5,
   "taxLife": 7
 }
+
+####
+# Example POST sending a URL via post - BASIC AUTHENTICATION
+POST http://localhost:5000/Calculate/Depreciate?GaapMethod=SL&TaxMethod=MACRSHY
+Content-Type: application/json
+Content-Type: text/plain
+Authorization: Basic testUser:testPassword
+
+{
+  "name": "New Asset",
+  "purchaseDate": "2011-01-01",
+  "purchasePrice": 1000,
+  "residualValue": 0,
+  "section179": 0,
+  "usefulLife": 5,
+  "taxLife": 7
+}
