@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="joelbyford.basicauth" Version="1.0.1" />
+    <PackageReference Include="joelbyford.BasicAuth" Version="1049464056.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
