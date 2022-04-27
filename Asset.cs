@@ -31,7 +31,49 @@ namespace DepCalcsCS
 
         public int UsefulLife {get; set;}
 
-        public TAX_Lifes TaxLife {get; set;}
+        private TAX_Lifes _TaxLife;
+        public int TaxLife {
+            get
+            {
+                return (int) this._TaxLife;
+            }
+
+            set
+            {
+                if (value == 20)
+                {
+                    _TaxLife = TAX_Lifes.TWENTY;
+                }
+                else if (value == 15)
+                {
+                    _TaxLife = TAX_Lifes.FIFTEEN;
+                }
+                else if (value == 10)
+                {
+                    _TaxLife = TAX_Lifes.TEN;
+                }
+                else if (value == 7)
+                {
+                    _TaxLife = TAX_Lifes.SEVEN;
+                }
+                else if (value ==5)
+                {
+                    _TaxLife = TAX_Lifes.FIVE;
+                }
+                else if (value ==3)
+                {
+                    _TaxLife = TAX_Lifes.THREE;
+                }
+                else if (value ==0)
+                {
+                    _TaxLife = TAX_Lifes.NONE;
+                }
+                else
+                {
+                    throw new Exception("INVALID_TAX_YEAR");
+                }
+            }
+        }
 
         public List<DepYear> GaapDepreciation {get; set;}
 
@@ -45,13 +87,13 @@ namespace DepCalcsCS
             PurchasePrice = 0;
             ResidualValue = 0;
             UsefulLife = 0;
-            TaxLife = TAX_Lifes.NONE;
+            TaxLife = (int)TAX_Lifes.NONE;
             Section179 = 0;
             return;
         }
 
         //Full Constructor
-        public Asset (string sName, DateTime dtPurchaseDate, double fPurchasePrice, double fResidualValue, int iUSefulLife,TAX_Lifes iTaxLife, double fSection179=0, string sDescription="" )
+        public Asset (string sName, DateTime dtPurchaseDate, double fPurchasePrice, double fResidualValue, int iUSefulLife,int iTaxLife, double fSection179=0, string sDescription="" )
         {
             Name = sName;
             //Description = sDescription;
@@ -59,8 +101,8 @@ namespace DepCalcsCS
             PurchasePrice = fPurchasePrice;
             ResidualValue = fResidualValue;
             UsefulLife = iUSefulLife;
-            TaxLife = iTaxLife;
             Section179 = fSection179;
+            TaxLife = iTaxLife;
             return;
         }
 
@@ -74,35 +116,7 @@ namespace DepCalcsCS
             ResidualValue = fResidualValue;
             UsefulLife = iUSefulLife;
             Section179 = fSection179;
-            //guess useful life since it wasn't provided to us
-            if (iUSefulLife >= 20)
-            {
-                TaxLife = TAX_Lifes.TWENTY;
-            }
-            else if (iUSefulLife >= 15)
-            {
-                TaxLife = TAX_Lifes.FIFTEEN;
-            }
-            else if (iUSefulLife >= 10)
-            {
-                TaxLife = TAX_Lifes.TEN;
-            }
-            else if (iUSefulLife >= 7)
-            {
-                TaxLife = TAX_Lifes.SEVEN;
-            }
-            else if (iUSefulLife >=5)
-            {
-                TaxLife = TAX_Lifes.FIVE;
-            }
-            else if (iUSefulLife >=3)
-            {
-                TaxLife = TAX_Lifes.THREE;
-            }
-            else
-            {
-                TaxLife = TAX_Lifes.NONE;
-            }
+            TaxLife = (int)TAX_Lifes.NONE;
             return;
         }
 

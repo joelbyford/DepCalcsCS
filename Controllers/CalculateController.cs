@@ -23,7 +23,6 @@ namespace DepCalcsCS.Controllers
         [Route("[controller]/Depreciate")]
         public ActionResult<Asset> PostDepreciate([FromBody]Asset asset, [RequiredFromQuery] string GaapMethod, [RequiredFromQuery] string TaxMethod)
         {
-            
             switch(GaapMethod)
             {
                 case "SL":
@@ -38,6 +37,8 @@ namespace DepCalcsCS.Controllers
                 case "SYD":
                     asset.calcSYD();
                     break;
+                default:
+                    throw new Exception("INVALID_GAAP_METHOD");
             }
 
             switch(TaxMethod)
@@ -48,6 +49,8 @@ namespace DepCalcsCS.Controllers
                 case "MACRSMQ":
                     asset.calcMacrsMQ();
                     break;
+                default:
+                    throw new Exception("INVALID_TAX_METHOD");
             }
             
             return asset;
@@ -91,9 +94,9 @@ namespace DepCalcsCS.Controllers
 
         [HttpGet]
         [Route("[controller]/MACRSHY")]
-        public ActionResult<Asset> GetMacrsHY([RequiredFromQuery] double PurchasePrice, [RequiredFromQuery]  int Life, string AssetName="", double Section179=0)
-        {
-            Asset asset = new Asset(PurchasePrice, 0, Life, AssetName, Section179);
+        public ActionResult<Asset> GetMacrsHY([RequiredFromQuery] double PurchasePrice, [RequiredFromQuery]  int Life, [RequiredFromQuery] DateTime PurchaseDate, string AssetName="", double Section179=0)
+        {            
+            Asset asset = new Asset (AssetName, PurchaseDate, PurchasePrice, 0, Life, Life, Section179, "" );
             asset.calcMacrsHY();
             return asset;
         }
@@ -102,38 +105,7 @@ namespace DepCalcsCS.Controllers
         [Route("[controller]/MACRSMQ")]
         public ActionResult<Asset> GetMacrsMQ([RequiredFromQuery] double PurchasePrice, [RequiredFromQuery]  int Life, [RequiredFromQuery] DateTime PurchaseDate, string AssetName="", double Section179=0)
         {
-            TAX_Lifes TaxLife;
-
-            if (Life >= 20)
-            {
-                TaxLife = TAX_Lifes.TWENTY;
-            }
-            else if (Life >= 15)
-            {
-                TaxLife = TAX_Lifes.FIFTEEN;
-            }
-            else if (Life >= 10)
-            {
-                TaxLife = TAX_Lifes.TEN;
-            }
-            else if (Life >= 7)
-            {
-                TaxLife = TAX_Lifes.SEVEN;
-            }
-            else if (Life >=5)
-            {
-                TaxLife = TAX_Lifes.FIVE;
-            }
-            else if (Life >=3)
-            {
-                TaxLife = TAX_Lifes.THREE;
-            }
-            else
-            {
-                TaxLife = TAX_Lifes.NONE;
-            }
-            
-            Asset asset = new Asset (AssetName, PurchaseDate, PurchasePrice, 0, Life, TaxLife, Section179, "" );
+            Asset asset = new Asset (AssetName, PurchaseDate, PurchasePrice, 0, Life, Life, Section179, "" );
             asset.calcMacrsMQ();
             return asset;
         }

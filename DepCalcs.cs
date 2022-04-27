@@ -165,34 +165,34 @@ namespace DepCalcsCS
             //calculate the basis given SS179
             fBasis = asset.PurchasePrice - asset.Section179;
 
-            for(iYear=0;iYear<=(int)asset.TaxLife;iYear++)
+            for(iYear=0;iYear<=asset.TaxLife;iYear++)
 	        {
                 DepYear oYear = new DepYear();
                 oYear.Year = iYear;
 
                 switch(asset.TaxLife)
                 {
-                    case TAX_Lifes.THREE:
+                    case 3:
                         oYear.Expense = fBasis * (HYtable3[iYear]/100);
                         break;
                     
-                    case TAX_Lifes.FIVE:
+                    case 5:
                         oYear.Expense = fBasis * (HYtable5[iYear]/100);
                         break;
 
-                    case TAX_Lifes.SEVEN:
+                    case 7:
                         oYear.Expense = fBasis * (HYtable7[iYear]/100);
                         break;
                     
-                    case TAX_Lifes.TEN:
+                    case 10:
                         oYear.Expense = fBasis * (HYtable10[iYear]/100);
                         break;
 
-                    case TAX_Lifes.FIFTEEN:
+                    case 15:
                         oYear.Expense = fBasis * (HYtable15[iYear]/100);
                         break;
 
-                    case TAX_Lifes.TWENTY:
+                    case 20:
                         oYear.Expense = fBasis * (HYtable20[iYear]/100);
                         break;
 
@@ -271,34 +271,34 @@ namespace DepCalcsCS
             //figure out the quarter by ignoring the fraction through casting to a short int
 	        iQtr = (short)(asset.PurchaseDate.Month/12);
 
-            for(iYear=0;iYear<=(int)asset.TaxLife;iYear++)
+            for(iYear=0;iYear<=asset.TaxLife;iYear++)
 	        {
                 DepYear oYear = new DepYear();
                 oYear.Year = iYear;
 
                 switch(asset.TaxLife)
                 {
-                    case TAX_Lifes.THREE:
+                    case 3:
                         oYear.Expense = fBasis * (MQtable3[iQtr,iYear]/100);
                         break;
                     
-                    case TAX_Lifes.FIVE:
+                    case 5:
                         oYear.Expense = fBasis * (MQtable5[iQtr,iYear]/100);
                         break;
 
-                    case TAX_Lifes.SEVEN:
+                    case 7:
                         oYear.Expense = fBasis * (MQtable7[iQtr,iYear]/100);
                         break;
                     
-                    case TAX_Lifes.TEN:
+                    case 10:
                         oYear.Expense = fBasis * (MQtable10[iQtr,iYear]/100);
                         break;
 
-                    case TAX_Lifes.FIFTEEN:
+                    case 15:
                         oYear.Expense = fBasis * (MQtable15[iQtr,iYear]/100);
                         break;
 
-                    case TAX_Lifes.TWENTY:
+                    case 20:
                         oYear.Expense = fBasis * (MQtable20[iQtr,iYear]/100);
                         break;
 

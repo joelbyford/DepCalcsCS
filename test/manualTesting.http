@@ -19,12 +19,22 @@ GET http://localhost:5000/Calculate/SYD?PurchasePrice=1000&Residual=0&Life=5&Ass
 ######################
 # MACRS-HY
 # ====================
-GET http://localhost:5000/Calculate/MACRSHY?PurchasePrice=1000&Life=5&Section179=200&AssetName=MacrsHyAsset
+GET http://localhost:5000/Calculate/MACRSHY?PurchasePrice=1000&Life=5&Section179=200&AssetName=MacrsHyAsset&PurchaseDate=10%2F01%2F2020
 
 ######################
 # MACRS-MQ
 # ====================
 GET http://localhost:5000/Calculate/MACRSMQ?PurchasePrice=1000&Life=5&Section179=200&AssetName=MacrsMqAsset&PurchaseDate=10%2F01%2F2020
+
+#############################
+# MACRS-HY - INVALID TAX YEAR 
+# ===========================
+GET http://localhost:5000/Calculate/MACRSHY?PurchasePrice=1000&Life=9&Section179=200&AssetName=MacrsHyAsset&PurchaseDate=10%2F01%2F2020
+
+###############################
+# MACRS-MQ - INVALID ERROR YEAR
+# =============================
+GET http://localhost:5000/Calculate/MACRSMQ?PurchasePrice=1000&Life=59&Section179=200&AssetName=MacrsMqAsset&PurchaseDate=10%2F01%2F2020
 
 #################################
 # Full Calculation via JSON POST
@@ -39,7 +49,7 @@ Content-Type: application/json
   "residualValue": 0,
   "section179": 0,
   "usefulLife": 5,
-  "taxLife": 7
+  "taxLife": 5
 }
 
 ####

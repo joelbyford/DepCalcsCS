@@ -29,7 +29,7 @@ namespace DepCalcsCS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddTransient<ExceptionMiddleware>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -43,9 +43,14 @@ namespace DepCalcsCS
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DepCalcsCS v1"));
+                
             }
+
+            // Always share the swagger info
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DepCalcsCS v1"));
+
+
             //Insert the Basic Authentication Middleware handler *ONLY IF* it was enabled in appsettings.json
             // see documentation at https://github.com/joelbyford/basicauth/ for more details
             bool basicAuthEnabled = this.Configuration.GetValue<bool>("AppSettings:BasicAuth:Enabled");
@@ -66,6 +71,8 @@ namespace DepCalcsCS
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseAuthorization();
 
