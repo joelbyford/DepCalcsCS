@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using joelbyford;
 using System.IO;
 using System.Text.Json;
+using System.Reflection;
 
 namespace DepCalcsCS
 {
@@ -33,7 +34,17 @@ namespace DepCalcsCS
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepCalcsCS", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo 
+                { 
+                    Title = "DepCalcsCS", 
+                    Version = "v1",
+                    Description = "A set of API calls to calculate GAAP and Tax Depreciation"
+                });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
