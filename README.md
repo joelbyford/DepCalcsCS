@@ -2,7 +2,7 @@
 Depreciation calculations in C# and implemented as a simple REST API calls for ease of understanding and usage.  
 
 ## Build
-Using dotnet 5 and the dotnet 5+ SDK simply build and deploy the resulting service to an Azure Website (or IIS server). 
+Using dotnet 6 and the dotnet 6+ SDK simply build and deploy the resulting service to an Azure Website (or IIS server). 
 
 -----------
 
