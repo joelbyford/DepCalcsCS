@@ -17,6 +17,83 @@ namespace DepCalcsCS.Controllers
         }
 
         /// <summary>
+        /// Returns an array of Assets with calculated Accounting and Tax Depreciation 'tables' along with the asset information originally submitted.
+        /// </summary>
+        /// <remarks>
+        /// Sample Request:
+        /// 
+        ///     POST /Calculate/DepreciateArray?GaapMethod=SL&amp;TaxMethod=MACRSHY
+        ///     [
+        ///     {
+        ///         "name": "New Asset",
+        ///         "purchaseDate": "2011-01-01",
+        ///         "purchasePrice": 1000,
+        ///         "residualValue": 0,
+        ///         "section179": 0,
+        ///         "usefulLife": 5,
+        ///         "taxLife": 5
+        ///     },
+        ///     {
+        ///         "name": "New Asset",
+        ///         "purchaseDate": "2011-01-01",
+        ///         "purchasePrice": 1000,
+        ///         "residualValue": 0,
+        ///         "section179": 0,
+        ///         "usefulLife": 5,
+        ///         "taxLife": 5
+        ///     }
+        ///     ]
+        /// </remarks>
+        /// <param name="assets">Array of Asset JSON dictionaries in the body of the post</param>
+        /// <param name="GaapMethod" example="SL">GAAP Depreciation Method (SL, DB200, DB150 OR SYD)</param>
+        /// <param name="TaxMethod" example="MACRSHY">Tax Depreciation Method (MACRSHY or MACRSMQ)</param>
+        /// <returns>Array of Asset objects with both accounting and tax depreciation calculations added</returns>
+        /// <response code="200">Returns array of asset objects</response>
+        /// <response code="422">If GAAP Method, Tax Method or Tax Life are invalid</response>
+        /// <response code="500">Any other error</response>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [Route("[controller]/DepreciateArray")]
+        public ActionResult<Asset[]> PostDepreciateArray([FromBody]Asset[] assets, [RequiredFromQuery] string GaapMethod, [RequiredFromQuery] string TaxMethod)
+        {
+            foreach(Asset asset in assets)
+            {
+                switch(GaapMethod)
+                {
+                    case "SL":
+                        asset.calcSL();
+                        break;
+                    case "DB200":
+                        asset.calcDB200();
+                        break;
+                    case "DB150":
+                        asset.calcDB150();
+                        break;
+                    case "SYD":
+                        asset.calcSYD();
+                        break;
+                    default:
+                        throw new Exception("INVALID_GAAP_METHOD");
+                }
+
+                switch(TaxMethod)
+                {
+                    case "MACRSHY":
+                        asset.calcMacrsHY();
+                        break;
+                    case "MACRSMQ":
+                        asset.calcMacrsMQ();
+                        break;
+                    default:
+                        throw new Exception("INVALID_TAX_METHOD");
+                }
+            }
+
+            return assets;
+        }
+
+        /// <summary>
         /// Returns an Asset with calculated Accounting and Tax Depreciation 'tables' along with the asset information originally submitted.
         /// </summary>
         /// <remarks>
