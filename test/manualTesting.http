@@ -73,3 +73,31 @@ Authorization: Basic testUser:testPassword
   "usefulLife": 5,
   "taxLife": 7
 }
+
+
+############################################
+# Full Array/Batch Calculation via JSON POST
+# ==========================================
+POST http://localhost:5000/Calculate/DepreciateArray?GaapMethod=SL&TaxMethod=MACRSHY
+Content-Type: application/json
+
+[
+  {
+    "name": "New Asset",
+    "purchaseDate": "2011-01-01",
+    "purchasePrice": 1000,
+    "residualValue": 0,
+    "section179": 0,
+    "usefulLife": 5,
+    "taxLife": 5
+  },
+  {
+    "name": "New Asset 2",
+    "purchaseDate": "2001-01-01",
+    "purchasePrice": 2000,
+    "residualValue": 0,
+    "section179": 0,
+    "usefulLife": 7,
+    "taxLife": 7
+  }
+]
