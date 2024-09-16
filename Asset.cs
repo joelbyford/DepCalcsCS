@@ -31,6 +31,10 @@ namespace DepCalcsCS
 
         public int UsefulLife {get; set;}
 
+        public string GaapMethod {get; set;}
+
+        public string TaxMethod {get; set;}
+
         private TAX_Lifes _TaxLife;
         public int TaxLife {
             get

@@ -45,8 +45,6 @@ namespace DepCalcsCS.Controllers
         ///     ]
         /// </remarks>
         /// <param name="assets">Array of Asset JSON dictionaries in the body of the post</param>
-        /// <param name="GaapMethod" example="SL">GAAP Depreciation Method (SL, DB200, DB150 OR SYD)</param>
-        /// <param name="TaxMethod" example="MACRSHY">Tax Depreciation Method (MACRSHY or MACRSMQ)</param>
         /// <returns>Array of Asset objects with both accounting and tax depreciation calculations added</returns>
         /// <response code="200">Returns array of asset objects</response>
         /// <response code="422">If GAAP Method, Tax Method or Tax Life are invalid</response>
@@ -55,11 +53,11 @@ namespace DepCalcsCS.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [Route("[controller]/DepreciateArray")]
-        public ActionResult<Asset[]> PostDepreciateArray([FromBody]Asset[] assets, [RequiredFromQuery] string GaapMethod, [RequiredFromQuery] string TaxMethod)
+        public ActionResult<Asset[]> PostDepreciateArray([FromBody]Asset[] assets)
         {
             foreach(Asset asset in assets)
             {
-                switch(GaapMethod)
+                switch(asset.GaapMethod)
                 {
                     case "SL":
                         asset.calcSL();
@@ -77,7 +75,7 @@ namespace DepCalcsCS.Controllers
                         throw new Exception("INVALID_GAAP_METHOD");
                 }
 
-                switch(TaxMethod)
+                switch(asset.TaxMethod)
                 {
                     case "MACRSHY":
                         asset.calcMacrsHY();
@@ -111,8 +109,6 @@ namespace DepCalcsCS.Controllers
         ///     }
         /// </remarks>
         /// <param name="asset">Asset JSON dictionary in the body of the post</param>
-        /// <param name="GaapMethod" example="SL">GAAP Depreciation Method (SL, DB200, DB150 OR SYD)</param>
-        /// <param name="TaxMethod" example="MACRSHY">Tax Depreciation Method (MACRSHY or MACRSMQ)</param>
         /// <returns>Asset object with both accounting and tax depreciation calculations added</returns>
         /// <response code="200">Returns asset object</response>
         /// <response code="422">If GAAP Method, Tax Method or Tax Life are invalid</response>
@@ -121,9 +117,9 @@ namespace DepCalcsCS.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [Route("[controller]/Depreciate")]
-        public ActionResult<Asset> PostDepreciate([FromBody]Asset asset, [RequiredFromQuery] string GaapMethod, [RequiredFromQuery] string TaxMethod)
+        public ActionResult<Asset> PostDepreciate([FromBody]Asset asset)
         {
-            switch(GaapMethod)
+            switch(asset.GaapMethod)
             {
                 case "SL":
                     asset.calcSL();
@@ -139,9 +135,9 @@ namespace DepCalcsCS.Controllers
                     break;
                 default:
                     throw new Exception("INVALID_GAAP_METHOD");
-            }
+            };
 
-            switch(TaxMethod)
+            switch(asset.TaxMethod)
             {
                 case "MACRSHY":
                     asset.calcMacrsHY();

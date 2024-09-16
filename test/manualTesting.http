@@ -44,7 +44,7 @@ GET http://localhost:5000/Calculate/MACRSMQ?PurchasePrice=1000&Life=59&Section17
 #################################
 # Full Calculation via JSON POST
 # ===============================
-POST http://localhost:5000/Calculate/Depreciate?GaapMethod=SL&TaxMethod=MACRSHY
+POST http://localhost:5000/Calculate/Depreciate
 Content-Type: application/json
 
 {
@@ -54,12 +54,14 @@ Content-Type: application/json
   "residualValue": 0,
   "section179": 0,
   "usefulLife": 5,
-  "taxLife": 5
+  "taxLife": 5,
+  "GaapMethod": "SL",
+  "TaxMethod": "MACRSHY"
 }
 
 ####
 # Example POST sending a URL via post - BASIC AUTHENTICATION
-POST http://localhost:5000/Calculate/Depreciate?GaapMethod=SL&TaxMethod=MACRSHY
+POST http://localhost:5000/Calculate/Depreciate
 Content-Type: application/json
 Content-Type: text/plain
 Authorization: Basic testUser:testPassword
@@ -71,14 +73,16 @@ Authorization: Basic testUser:testPassword
   "residualValue": 0,
   "section179": 0,
   "usefulLife": 5,
-  "taxLife": 7
+  "taxLife": 7,
+  "GaapMethod": "SL",
+  "TaxMethod": "MACRSHY"
 }
 
 
 ############################################
 # Full Array/Batch Calculation via JSON POST
 # ==========================================
-POST http://localhost:5000/Calculate/DepreciateArray?GaapMethod=SL&TaxMethod=MACRSHY
+POST http://localhost:5000/Calculate/DepreciateArray
 Content-Type: application/json
 
 [
@@ -89,7 +93,9 @@ Content-Type: application/json
     "residualValue": 0,
     "section179": 0,
     "usefulLife": 5,
-    "taxLife": 5
+    "taxLife": 5,
+    "GaapMethod": "SL",
+    "TaxMethod": "MACRSHY"
   },
   {
     "name": "New Asset 2",
@@ -98,6 +104,8 @@ Content-Type: application/json
     "residualValue": 0,
     "section179": 0,
     "usefulLife": 7,
-    "taxLife": 7
+    "taxLife": 7,
+    "GaapMethod": "DB200",
+    "TaxMethod": "MACRSMQ"
   }
 ]
