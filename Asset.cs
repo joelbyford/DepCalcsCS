@@ -83,6 +83,9 @@ namespace DepCalcsCS
 
         public List<DepYear> TaxDepreciation {get; set;}
 
+        public int StatusCode { get; set; } // Renamed from NumericStatusCode
+        public string StatusMessage { get; set; } // New: Status text or error message
+
         //Empty Constructor
         public Asset()
         {

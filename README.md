@@ -131,6 +131,78 @@ Returns:
 - **422** - Error for an invalid tax life, GAAP Method or Tax Method provided (See returned error description for which).
 - **500** - Any other error.
 
+### POST - DepreciateArray (Batch Calculation with Per-Asset Status)
+A comprehensive call that returns an array of Asset objects, each with both GAAP and Tax depreciation tables, all original input fields, and per-object status fields. If all assets succeed, the HTTP response is 200. If any fail, the response is 207 (Multi-Status), and each asset's status is included in the response.
+
+Example Request:
+
+```
+POST /Calculate/DepreciateArray
+Content-Type: application/json
+
+[
+  {
+    "name": "New Asset",
+    "purchaseDate": "2011-01-01",
+    "purchasePrice": 1000,
+    "residualValue": 0,
+    "section179": 0,
+    "usefulLife": 5,
+    "taxLife": 5,
+    "gaapMethod": "SL",
+    "taxMethod": "MACRSHY"
+  },
+  {
+    "name": "New Asset 2",
+    "purchaseDate": "2001-01-01",
+    "purchasePrice": 2000,
+    "residualValue": 0,
+    "section179": 0,
+    "usefulLife": 7,
+    "taxLife": 7,
+    "gaapMethod": "DB200",
+    "taxMethod": "INVALIDMETHOD"
+  }
+]
+```
+
+Example Response (HTTP 207 if any fail):
+
+```
+[
+  {
+    "name": "New Asset",
+    "purchaseDate": "2011-01-01",
+    "purchasePrice": 1000,
+    "residualValue": 0,
+    "section179": 0,
+    "usefulLife": 5,
+    "taxLife": 5,
+    "gaapMethod": "SL",
+    "taxMethod": "MACRSHY",
+    "statusCode": 200,
+    "statusMessage": "Calculation succeeded.",
+    "gaapDepreciation": [...],
+    "taxDepreciation": [...]
+  },
+  {
+    "name": "New Asset 2",
+    "purchaseDate": "2001-01-01",
+    "purchasePrice": 2000,
+    "residualValue": 0,
+    "section179": 0,
+    "usefulLife": 7,
+    "taxLife": 7,
+    "gaapMethod": "DB200",
+    "taxMethod": "INVALIDMETHOD",
+    "statusCode": 422,
+    "statusMessage": "Invalid Tax Method Provided. Only MACRSHY and MACRSMQ allowed.",
+    "gaapDepreciation": [...],
+    "taxDepreciation": null
+  }
+]
+```
+
 -----------
 
 ## Additional Documentation and Examples

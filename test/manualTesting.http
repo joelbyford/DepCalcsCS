@@ -94,8 +94,8 @@ Content-Type: application/json
     "section179": 0,
     "usefulLife": 5,
     "taxLife": 5,
-    "GaapMethod": "SL",
-    "TaxMethod": "MACRSHY"
+    "gaapMethod": "SL",
+    "taxMethod": "MACRSHY"
   },
   {
     "name": "New Asset 2",
@@ -105,7 +105,41 @@ Content-Type: application/json
     "section179": 0,
     "usefulLife": 7,
     "taxLife": 7,
-    "GaapMethod": "DB200",
-    "TaxMethod": "MACRSMQ"
+    "gaapMethod": "DB200",
+    "taxMethod": "INVALIDMETHOD"
   }
 ]
+
+# Sample Response (HTTP 207 if any fail):
+# [
+#   {
+#     "name": "New Asset",
+#     "purchaseDate": "2011-01-01",
+#     "purchasePrice": 1000,
+#     "residualValue": 0,
+#     "section179": 0,
+#     "usefulLife": 5,
+#     "taxLife": 5,
+#     "gaapMethod": "SL",
+#     "taxMethod": "MACRSHY",
+#     "statusCode": 200,
+#     "statusMessage": "Calculation succeeded.",
+#     "gaapDepreciation": [...],
+#     "taxDepreciation": [...]
+#   },
+#   {
+#     "name": "New Asset 2",
+#     "purchaseDate": "2001-01-01",
+#     "purchasePrice": 2000,
+#     "residualValue": 0,
+#     "section179": 0,
+#     "usefulLife": 7,
+#     "taxLife": 7,
+#     "gaapMethod": "DB200",
+#     "taxMethod": "INVALIDMETHOD",
+#     "statusCode": 422,
+#     "statusMessage": "Invalid Tax Method Provided. Only MACRSHY and MACRSMQ allowed.",
+#     "gaapDepreciation": [...],
+#     "taxDepreciation": null
+#   }
+# ]
