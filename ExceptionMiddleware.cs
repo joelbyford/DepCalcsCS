@@ -30,6 +30,22 @@ namespace DepCalcsCS
                         context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
                         await context.Response.WriteAsync("Invalid Tax Year.  Only the following allowed: 3, 5, 7, 10, 15 & 20");
                         break;
+                    case("INVALID_ADS_ASSET_CLASS"):
+                        context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+                        await context.Response.WriteAsync("Invalid ADS Asset Class. Use a supported class or provide RecoveryPeriod and Convention overrides.");
+                        break;
+                    case("INVALID_ADS_RECOVERY_PERIOD"):
+                        context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+                        await context.Response.WriteAsync("Invalid ADS Recovery Period. Provide a value greater than zero.");
+                        break;
+                    case("INVALID_ADS_CONVENTION"):
+                        context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+                        await context.Response.WriteAsync("Invalid ADS Convention. Only HALFYEAR, MIDQUARTER, MIDMONTH, and FULLYEAR are allowed.");
+                        break;
+                    case("INVALID_PURCHASE_PRICE"):
+                        context.Response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+                        await context.Response.WriteAsync("Invalid depreciation basis. Purchase price must be greater than or equal to residual value.");
+                        break;
                     default:
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         await context.Response.WriteAsync("Unhandled exception occurred");

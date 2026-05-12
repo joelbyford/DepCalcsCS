@@ -103,6 +103,25 @@ Returns:
 - **422** - Error for an invalid tax life provided (see Life above for valid values).
 - **500** - Any other error.
 
+### GET - IRS MACRS ADS Depreciation
+A call that returns an ADS (Alternative Depreciation System) straight-line depreciation table for a single asset.  Example Usage:
+
+`GET /Calculate/MACRSADS?PurchasePrice=1000&PurchaseDate=10%2F01%2F2020&AssetClass=NonResidentialRealProperty&AssetName=MacrsAdsAsset`
+
+Parameters:
+- **PurchasePrice** - Original price of the asset.
+- **PurchaseDate** - A URL encoded date representing the date an asset was placed in service.
+- **AssetClass** - ADS asset class used to infer default ADS recovery period and convention. Supported values: PersonalProperty3Year, PersonalProperty5Year, PersonalProperty7Year, PersonalProperty10Year, PersonalProperty15Year, PersonalProperty20Year, ResidentialRentalProperty, NonResidentialRealProperty.
+- **AssetName** - (Optional) A name for the asset.
+- **Residual** - (Optional) Residual value used for depreciation basis.
+- **RecoveryPeriod** - (Optional) ADS recovery period override in years. Useful for electing ADS on specific assets/classes.
+- **Convention** - (Optional) ADS convention override (HALFYEAR, MIDQUARTER, MIDMONTH or FULLYEAR). Useful for electing ADS on specific assets/classes.
+
+Returns:
+- **200** - Success and returns an ADS depreciation object with depreciation table by year.
+- **422** - Error for invalid ADS asset class, recovery period, convention, or depreciation basis.
+- **500** - Any other error.
+
 ### POST - Depreciate (Calculate both tax and GAAP depreciation tables)
 A comprehensive call that returns an Asset object with both GAAP and Tax depreciation tables for a single asset.  Example Usage:
 

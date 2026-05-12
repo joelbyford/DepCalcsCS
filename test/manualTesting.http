@@ -55,6 +55,26 @@ GET http://localhost:5000/Calculate/MACRSMQ
 &AssetName=MacrsMqAsset
 &PurchaseDate=10%2F01%2F2020
 
+######################
+# MACRS-ADS
+# ====================
+GET http://localhost:5000/Calculate/MACRSADS
+?PurchasePrice=1000
+&PurchaseDate=10%2F01%2F2020
+&AssetClass=NonResidentialRealProperty
+&AssetName=MacrsAdsAsset
+
+######################
+# MACRS-ADS - override convention/period
+# ====================
+GET http://localhost:5000/Calculate/MACRSADS
+?PurchasePrice=1000
+&PurchaseDate=10%2F01%2F2020
+&AssetClass=PersonalProperty5Year
+&RecoveryPeriod=7
+&Convention=MIDQUARTER
+&AssetName=MacrsAdsAssetOverride
+
 #############################
 # MACRS-HY - INVALID TAX YEAR 
 # ===========================

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,17 @@ namespace DepCalcsCS.Controllers
     [ApiController]
     public class CalculateController : ControllerBase
     {
+        private static readonly Dictionary<string, (double RecoveryPeriod, string Convention)> AdsClassDefaults = new Dictionary<string, (double RecoveryPeriod, string Convention)>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "PersonalProperty3Year", (3, "HALFYEAR") },
+            { "PersonalProperty5Year", (5, "HALFYEAR") },
+            { "PersonalProperty7Year", (7, "HALFYEAR") },
+            { "PersonalProperty10Year", (10, "HALFYEAR") },
+            { "PersonalProperty15Year", (15, "HALFYEAR") },
+            { "PersonalProperty20Year", (20, "HALFYEAR") },
+            { "ResidentialRentalProperty", (30, "MIDMONTH") },
+            { "NonResidentialRealProperty", (40, "MIDMONTH") }
+        };
 
         private readonly ILogger<CalculateController> _logger;
 
@@ -269,6 +281,74 @@ namespace DepCalcsCS.Controllers
             Asset asset = new Asset (AssetName, PurchaseDate, PurchasePrice, 0, Life, Life, Section179, "" );
             asset.calcMacrsMQ();
             return asset;
+        }
+
+        /// <summary>
+        /// Returns an ADS (Alternative Depreciation System) straight-line depreciation table for a single asset.
+        /// </summary>
+        /// <param name="PurchasePrice" example="1000">Original price of the asset</param>
+        /// <param name="PurchaseDate" example="10%2F01%2F2020">The date an asset was placed in service</param>
+        /// <param name="AssetClass" example="NonResidentialRealProperty">ADS asset class used to default recovery period and convention</param>
+        /// <param name="AssetName" example="AdsAsset">(Optional) Name of the asset</param>
+        /// <param name="Residual" example="0">(Optional) Residual value used for depreciation basis</param>
+        /// <param name="RecoveryPeriod" example="40">(Optional) Explicit ADS recovery period override in years</param>
+        /// <param name="Convention" example="MIDMONTH">(Optional) Explicit ADS convention override (HALFYEAR, MIDQUARTER, MIDMONTH, FULLYEAR)</param>
+        /// <returns>ADS depreciation details and depreciation table</returns>
+        /// <response code="200">Returns ADS depreciation object</response>
+        /// <response code="422">If asset class, recovery period, or convention are invalid</response>
+        [HttpGet]
+        [Route("[controller]/MACRSADS")]
+        public ActionResult<AdsDepreciationResult> GetMacrsADS([RequiredFromQuery] double PurchasePrice, [RequiredFromQuery] DateTime PurchaseDate, [RequiredFromQuery] string AssetClass, string AssetName = "", double Residual = 0, double? RecoveryPeriod = null, string Convention = null)
+        {
+            (double recoveryPeriod, string convention) = ResolveAdsRule(AssetClass, RecoveryPeriod, Convention);
+            List<DepYear> table = DepCalcs.CalcMacrsADS(PurchasePrice, Residual, PurchaseDate, recoveryPeriod, convention);
+
+            AdsDepreciationResult result = new AdsDepreciationResult();
+            result.AssetName = AssetName;
+            result.AssetClass = AssetClass;
+            result.PurchaseDate = PurchaseDate;
+            result.PurchasePrice = PurchasePrice;
+            result.ResidualValue = Residual;
+            result.RecoveryPeriod = recoveryPeriod;
+            result.Convention = convention;
+            result.DepreciationTable = table;
+
+            return result;
+        }
+
+        private static (double RecoveryPeriod, string Convention) ResolveAdsRule(string assetClass, double? recoveryPeriodOverride, string conventionOverride)
+        {
+            if (recoveryPeriodOverride.HasValue || !String.IsNullOrWhiteSpace(conventionOverride))
+            {
+                double recoveryPeriod = 0;
+
+                if (recoveryPeriodOverride.HasValue)
+                {
+                    if (recoveryPeriodOverride.Value <= 0)
+                    {
+                        throw new Exception("INVALID_ADS_RECOVERY_PERIOD");
+                    }
+
+                    recoveryPeriod = recoveryPeriodOverride.Value;
+                }
+                else if (!String.IsNullOrWhiteSpace(assetClass) && AdsClassDefaults.ContainsKey(assetClass))
+                {
+                    recoveryPeriod = AdsClassDefaults[assetClass].RecoveryPeriod;
+                }
+                else
+                {
+                    throw new Exception("INVALID_ADS_RECOVERY_PERIOD");
+                }
+
+                return (recoveryPeriod, conventionOverride);
+            }
+
+            if (String.IsNullOrWhiteSpace(assetClass) || !AdsClassDefaults.ContainsKey(assetClass))
+            {
+                throw new Exception("INVALID_ADS_ASSET_CLASS");
+            }
+
+            return AdsClassDefaults[assetClass];
         }
         
     }

@@ -325,5 +325,83 @@ namespace DepCalcsCS
 
             return years;
         }
+
+        /*----------------------------------------*/
+        /* ------- MACRS-ADS Depreciation ------- */
+        /*----------------------------------------*/
+        public static List<DepYear> CalcMacrsADS(double purchasePrice, double residualValue, DateTime purchaseDate, double recoveryPeriod, string convention)
+        {
+            List<DepYear> years = new List<DepYear>();
+
+            if (recoveryPeriod <= 0)
+            {
+                throw new Exception("INVALID_ADS_RECOVERY_PERIOD");
+            }
+
+            double basis = purchasePrice - residualValue;
+            if (basis < 0)
+            {
+                throw new Exception("INVALID_PURCHASE_PRICE");
+            }
+
+            string normalizedConvention = NormalizeAdsConvention(convention);
+            double annualExpense = basis / recoveryPeriod;
+            double remainingBasis = basis;
+            double firstYearFraction = GetFirstYearFraction(normalizedConvention, purchaseDate);
+            int iYear = 0;
+
+            if (remainingBasis > 0)
+            {
+                DepYear firstYear = new DepYear();
+                firstYear.Year = iYear;
+                firstYear.Expense = Math.Min(remainingBasis, annualExpense * firstYearFraction);
+                firstYear.AccumulatedDepreciation = firstYear.Expense;
+                years.Add(firstYear);
+                remainingBasis -= firstYear.Expense;
+                iYear++;
+            }
+
+            while (remainingBasis > 0)
+            {
+                DepYear year = new DepYear();
+                year.Year = iYear;
+                year.Expense = Math.Min(remainingBasis, annualExpense);
+                year.AccumulatedDepreciation = years[iYear - 1].AccumulatedDepreciation + year.Expense;
+
+                years.Add(year);
+                remainingBasis -= year.Expense;
+                iYear++;
+            }
+
+            return years;
+        }
+
+        private static string NormalizeAdsConvention(string convention)
+        {
+            if (String.IsNullOrWhiteSpace(convention))
+            {
+                return "HALFYEAR";
+            }
+
+            return convention.Trim().ToUpperInvariant();
+        }
+
+        private static double GetFirstYearFraction(string convention, DateTime purchaseDate)
+        {
+            switch (convention)
+            {
+                case "HALFYEAR":
+                    return 0.5;
+                case "MIDMONTH":
+                    return ((12 - purchaseDate.Month) + 0.5) / 12;
+                case "MIDQUARTER":
+                    int quarter = ((purchaseDate.Month - 1) / 3) + 1;
+                    return (10.5 - ((quarter - 1) * 3)) / 12;
+                case "FULLYEAR":
+                    return 1;
+                default:
+                    throw new Exception("INVALID_ADS_CONVENTION");
+            }
+        }
     } 
 }
