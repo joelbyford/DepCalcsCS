@@ -20,6 +20,13 @@ namespace DepCalcsCS.Controllers
             { "ResidentialRentalProperty", (30, "MIDMONTH") },
             { "NonResidentialRealProperty", (40, "MIDMONTH") }
         };
+        private static readonly HashSet<string> AdsConventions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "HALFYEAR",
+            "MIDQUARTER",
+            "MIDMONTH",
+            "FULLYEAR"
+        };
 
         private readonly ILogger<CalculateController> _logger;
 
@@ -320,6 +327,7 @@ namespace DepCalcsCS.Controllers
         {
             if (recoveryPeriodOverride.HasValue || !String.IsNullOrWhiteSpace(conventionOverride))
             {
+                string convention = NormalizeAndValidateConvention(conventionOverride);
                 double recoveryPeriod = 0;
 
                 if (recoveryPeriodOverride.HasValue)
@@ -340,7 +348,7 @@ namespace DepCalcsCS.Controllers
                     throw new Exception("INVALID_ADS_RECOVERY_PERIOD");
                 }
 
-                return (recoveryPeriod, conventionOverride);
+                return (recoveryPeriod, convention);
             }
 
             if (String.IsNullOrWhiteSpace(assetClass) || !AdsClassDefaults.ContainsKey(assetClass))
@@ -349,6 +357,22 @@ namespace DepCalcsCS.Controllers
             }
 
             return AdsClassDefaults[assetClass];
+        }
+
+        private static string NormalizeAndValidateConvention(string convention)
+        {
+            if (String.IsNullOrWhiteSpace(convention))
+            {
+                return null;
+            }
+
+            string normalized = convention.Trim().ToUpperInvariant();
+            if (!AdsConventions.Contains(normalized))
+            {
+                throw new Exception("INVALID_ADS_CONVENTION");
+            }
+
+            return normalized;
         }
         
     }
